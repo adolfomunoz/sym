@@ -16,15 +16,35 @@ private:
 protected:
 	expression(const std::shared_ptr<const detail::Expression>& e) : e_(e) { }
 public:
+	//Maybe add more constant constructors later on
 	expression(int   i);
 	expression(float f);
 
 	std::string to_string() const { return e_->to_string(); }
 	float evaluate() const { return e_->evaluate(); }
+	bool depends_on(const symbol& s) const {
+		return e_->depends_on(s);
+	}
+	
+	//SUBSTITUTIONS
 	expression substitute(const symbol& s, const expression& e) const {
 		return expression(e_->substitute(s,e));
 	}
+	template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> > 
+	expression substitute(const symbol& s, const Num& n) const {
+		return substitute(s,expression(n));
+	}
+
+	//ADDITIONS
+	expression operator+(const expression& that) const;
+	template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> > 
+	expression operator+(const Num& n) const {
+		return (*this)+expression(n);
+	}
 };
+
+template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >
+expression operator+(const Num& a, const expression& b) { return b+a; }
 
 std::ostream& operator<<(std::ostream& os, const expression& e);
 

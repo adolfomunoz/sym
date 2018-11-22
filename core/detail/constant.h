@@ -17,6 +17,9 @@ public:
 	expression substitute(const symbol& s, const expression& e) const override {
 		return expression(c); 
 	}
+	bool depends_on(const symbol& s) const override {
+		return false;
+	}
 };
 
 }

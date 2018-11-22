@@ -4,8 +4,8 @@
 namespace sym {
 
 namespace detail {
-expression Symbol::substitute(const symbol& s, const expression& e) const {
-	if (s.internal_pointer() == shared_from_this()) return e; else return expression(this->shared_from_this());
+bool Symbol::depends_on(const symbol& s) const {
+	return (s.internal_pointer() == shared_from_this());
 }
 }
 }

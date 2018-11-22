@@ -6,9 +6,11 @@
 namespace sym {
 
 class symbol_evaluation_error : public std::runtime_error {
+	std::string name_;
 public:
 	symbol_evaluation_error(const std::string& name) :
-		std::runtime_error(std::string("Trying to evaluate symbol ")+name) { }
+		std::runtime_error(std::string("Trying to evaluate symbol ")+name), name_(name) { }
+	const std::string& name() const { return name_; }
 };
 
 namespace detail {
@@ -20,7 +22,10 @@ public:
 	std::string to_string() const override { return name; }
 	float evaluate() const override { throw symbol_evaluation_error(name); }
 	
-	expression substitute(const symbol& s, const expression& e) const override;
+	bool depends_on(const symbol& s) const override;
+	expression substitute(const symbol& s, const expression& e) const override {
+		if (depends_on(s)) return e; else return expression(this->shared_from_this());
+	}
 };
 
 }
