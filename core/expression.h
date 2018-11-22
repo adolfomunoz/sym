@@ -1,30 +1,31 @@
 #pragma once
 
-#include <memory>
-#include <string>
+#include "detail/expression.h"
+#include <iostream>
 
 namespace sym {
 
-class Symbol;
-
-class Expression {
-public:
-	virtual std::string to_string() const = 0;
-	virtual float eval() const = 0;	
-	virtual std::shared_ptr<Expression> subs(const Symbol& symbol, const std::shared_ptr<Expression>& e) const = 0;
-};
+namespace detail {	class Symbol;	}
 
 // Wrapper to avoid using shared pointers all the time everywhere and for easy use
-class ex {
-	std::shared_ptr<Expression> e;
+class expression {
+	std::shared_ptr<const detail::Expression> e_;
+private:
+	const std::shared_ptr<const detail::Expression>& internal_pointer() const { return e_; }
+	friend class detail::Symbol;
+protected:
+	expression(const std::shared_ptr<const detail::Expression>& e) : e_(e) { }
 public:
-	ex(const std::shared_ptr<Expression>& e) : e(e) { }
+	expression(int   i);
+	expression(float f);
 
-	std::string to_string() const { return e->to_string(); }
-	float eval() const { return e->eval(); }
-	ex subs(const Symbol& symbol, const ex& replacement) const {
-		return ex(e->subs(symbol,replacement.e));
+	std::string to_string() const { return e_->to_string(); }
+	float evaluate() const { return e_->evaluate(); }
+	expression substitute(const symbol& s, const expression& e) const {
+		return expression(e_->substitute(s,e));
 	}
 };
+
+std::ostream& operator<<(std::ostream& os, const expression& e);
 
 }

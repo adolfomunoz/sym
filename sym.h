@@ -1,3 +1,3 @@
 #include <core/expression.h>
 #include <core/symbol.h>
-#include <core/constant.h>
+#include <core/detail/constant.h>

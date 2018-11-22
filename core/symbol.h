@@ -1,35 +1,17 @@
 #pragma once
 
-#include "expression.h"
+#include "detail/symbol.h"
 #include <exception>
 
 namespace sym {
 
-class symbol_eval : public std::runtime_error {
+// Wrapper to avoid using shared pointers all the time everywhere and for easy use, and to ensure symbol identification through to its memory address
+class symbol : public expression {
 public:
-	symbol_eval(const std::string& name) :
-		std::runtime_error(std::string("Trying to evaluate symbol ")+name) { }
+	symbol(const std::string& name) : expression(std::make_shared<detail::Symbol>(name)) { } //This is the only case in which we create the symbol
+
+	//Copy/move constructors and assignments copy/move the pointer, which is what we want.
+	//operator== compares pointers, which is what we want.
 };
-
-class Symbol : public Expression {
-	static unsigned int ids;
-	unsigned int id;
-	std::string name;
-public:
-	Symbol(const std::string& name) : id(++ids), name(name) { }
-
-	bool operator==(const Symbol& that) const { return this->id == that.id; }
-	bool operator!=(const Symbol& that) const { return this->id != that.id; }
-
-	std::string to_string() const override { return name; }
-	float eval() const override { throw symbol_eval(name); }
-	
-	std::shared_ptr<Expression> subs(const Symbol& symbol, const std::shared_ptr<Expression>& e) const override {
-		if (symbol == (*this)) return e; else return std::make_shared<Symbol>(*this);
-	}	
-};
-
-unsigned int Symbol::ids = 0;
-
 
 }

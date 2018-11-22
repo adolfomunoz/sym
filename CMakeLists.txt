@@ -51,6 +51,14 @@ endif()
 #Basic include directory
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
+######################################################################################
+# SOURCE FILES
+######################################################################################
+set(srcs_sym 
+	${CMAKE_CURRENT_LIST_DIR}/core/expression.cc
+	${CMAKE_CURRENT_LIST_DIR}/core/detail/symbol.cc
+)
+
 ###################################################################################
 # USEFUL FUNCTIONS
 ###################################################################################
@@ -61,7 +69,7 @@ function(add_subdirectories_and_compile directory)
 		get_filename_component(child ${fullchild} NAME)
 		if(IS_DIRECTORY ${fullchild})
 			if (EXISTS ${fullchild}/${child}.cc)
-				add_executable(${CMAKE_PROJECT_NAME}-${dir}-${child} ${fullchild}/${child}.cc)
+				add_executable(${CMAKE_PROJECT_NAME}-${dir}-${child} ${srcs_sym} ${fullchild}/${child}.cc)
 			else()
 				add_subdirectory(${fullchild})
 			endif()
