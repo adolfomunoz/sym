@@ -26,6 +26,7 @@ public:
 		return e_->depends_on(s);
 	}
 	
+	expression derivative(const symbol& s) const { return e_->derivative(s); }
 	//SUBSTITUTIONS
 	expression substitute(const symbol& s, const expression& e) const {
 		return expression(e_->substitute(s,e));
@@ -41,10 +42,33 @@ public:
 	expression operator+(const Num& n) const {
 		return (*this)+expression(n);
 	}
+
+	//PRODUCTS
+	expression operator*(const expression& that) const;
+	template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> > 
+	expression operator*(const Num& n) const {
+		return (*this)*expression(n);
+	}
+
+	//SUBSTRACTION
+	expression operator-() const {
+		return (*this)*(-1);
+	}
+	expression operator-(const expression& that) const {
+		return (*this)+(-that);
+	}
+	template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> > 
+	expression operator-(const Num& n) const {
+		return (*this)-expression(n);
+	}
+
+
 };
 
 template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >
 expression operator+(const Num& a, const expression& b) { return b+a; }
+template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >
+expression operator*(const Num& a, const expression& b) { return b*a; }
 
 std::ostream& operator<<(std::ostream& os, const expression& e);
 

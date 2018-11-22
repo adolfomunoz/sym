@@ -18,6 +18,9 @@ public:
 	bool depends_on(const symbol& s) const override {
 		return e1_.depends_on(s) || e2_.depends_on(s);
 	}
+	expression derivative(const symbol& s) const override {
+		return e1_.derivative(s) + e2_.derivative(s);
+	}
 };
 
 }

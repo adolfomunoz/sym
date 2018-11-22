@@ -19,5 +19,4 @@ int main(int argc, char** argv) {
 	std::cout<<show_and_evaluate(ex.substitute(x,-3))<<std::endl;
 	std::cout<<show_and_evaluate(ex.substitute(x,-3).substitute(y,29))<<std::endl;
 	std::cout<<show_and_evaluate(ex.substitute(y,y+3))<<std::endl;
-
 }

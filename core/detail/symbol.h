@@ -26,6 +26,9 @@ public:
 	expression substitute(const symbol& s, const expression& e) const override {
 		if (depends_on(s)) return e; else return expression(this->shared_from_this());
 	}
+	expression derivative(const symbol& s) const override {
+		if (depends_on(s)) return expression(1); else return expression(0);
+	}
 };
 
 }
