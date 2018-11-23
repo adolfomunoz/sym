@@ -5,12 +5,12 @@
 namespace sym {
 
 namespace detail {
-class Product : public Expression {
+class Product : public VisitableDerived<Product,Expression> {
 	expression e1_, e2_;
 public:
 	Product(const expression& e1, const expression& e2) : e1_(e1), e2_(e2) { }
 
-	std::string to_string() const override { return e1_.to_string()+" * "+e2_.to_string(); }
+	std::string to_string() const override { return e1_.to_string()+e2_.to_string(); }
 	float evaluate() const override { return e1_.evaluate()*e2_.evaluate(); }
 	expression substitute(const symbol& s, const expression& e) const override {
 		return e1_.substitute(s,e)*e2_.substitute(s,e); 
@@ -22,6 +22,11 @@ public:
 		return e1_*e2_.derivative(s) + e1_.derivative(s)*e2_;
 	}
 };
+
+inline expression product(const expression& e1, const expression& e2) {
+	return expression(std::make_shared<Product>(e1,e2));
+}
+
 
 }
 }

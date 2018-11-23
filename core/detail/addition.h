@@ -5,7 +5,7 @@
 namespace sym {
 
 namespace detail {
-class Addition : public Expression {
+class Addition : public VisitableDerived<Addition,Expression> {
 	expression e1_, e2_;
 public:
 	Addition(const expression& e1, const expression& e2) : e1_(e1), e2_(e2) { }
@@ -22,6 +22,10 @@ public:
 		return e1_.derivative(s) + e2_.derivative(s);
 	}
 };
+
+inline expression addition(const expression& e1, const expression& e2) {
+	return expression(std::make_shared<Addition>(e1,e2));
+}
 
 }
 }

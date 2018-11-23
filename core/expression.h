@@ -12,10 +12,12 @@ class expression {
 	std::shared_ptr<const detail::Expression> e_;
 private:
 	const std::shared_ptr<const detail::Expression>& internal_pointer() const { return e_; }
+	friend class detail::Expression;
 	friend class detail::Symbol;
-protected:
-	expression(const std::shared_ptr<const detail::Expression>& e) : e_(e) { }
 public:
+	expression(const std::shared_ptr<const detail::Expression>& e) : e_(e) { } //Should not be used in the general case
+	expression() { } //Required by the visitable stuff but never used elsewhere. Should find a way to hide this from "public"
+
 	//Maybe add more constant constructors later on
 	expression(int   i);
 	expression(float f);
@@ -37,14 +39,18 @@ public:
 	}
 
 	//ADDITIONS
-	expression operator+(const expression& that) const;
+	expression operator+(const expression& that) const {
+		return e_->add_to(that);
+	}
 	template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> > 
 	expression operator+(const Num& n) const {
 		return (*this)+expression(n);
 	}
 
 	//PRODUCTS
-	expression operator*(const expression& that) const;
+	expression operator*(const expression& that) const {
+		return e_->multiply_by(that);
+	}
 	template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> > 
 	expression operator*(const Num& n) const {
 		return (*this)*expression(n);
@@ -62,7 +68,9 @@ public:
 		return (*this)-expression(n);
 	}
 
-
+	//APPLY (VISITOR STUFF FOR DOUBLE DISPATCH). WORKS SIMILAR TO STD::VISIT BUT WITH INHERITANCE.
+	template<typename F>
+	auto apply(const F& f) const { return e_->apply(f); }
 };
 
 template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >

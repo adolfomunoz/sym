@@ -5,7 +5,7 @@ namespace sym {
 
 namespace detail {
 bool Symbol::depends_on(const symbol& s) const {
-	return (s.internal_pointer() == shared_from_this());
+	return (s.internal_pointer() == this->shared_from_this());
 }
 }
 }

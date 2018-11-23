@@ -14,7 +14,7 @@ public:
 };
 
 namespace detail {
-class Symbol : public Expression, public std::enable_shared_from_this<Symbol> {
+class Symbol : public VisitableDerived<Symbol,Expression> {
 	std::string name;
 public:
 	Symbol(const std::string& name) : name(name) { }
@@ -24,7 +24,7 @@ public:
 	
 	bool depends_on(const symbol& s) const override;
 	expression substitute(const symbol& s, const expression& e) const override {
-		if (depends_on(s)) return e; else return expression(this->shared_from_this());
+		if (depends_on(s)) return e; else return *this;
 	}
 	expression derivative(const symbol& s) const override {
 		if (depends_on(s)) return expression(1); else return expression(0);

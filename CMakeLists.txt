@@ -56,6 +56,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR})
 ######################################################################################
 set(srcs_sym 
 	${CMAKE_CURRENT_LIST_DIR}/core/expression.cc
+	${CMAKE_CURRENT_LIST_DIR}/core/detail/expression.cc
 	${CMAKE_CURRENT_LIST_DIR}/core/detail/symbol.cc
 )
 
