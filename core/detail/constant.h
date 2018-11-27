@@ -26,33 +26,65 @@ public:
 	bool depends_on(const symbol& s) const override {
 		return false;
 	}
-	
-	expression add_to(const expression& that) const override{
-		if (value() == Num(0)) return that;
-		else return that.apply(overloaded {
-			[this] (const auto& ex) {
-				return addition(ex,*this);
-			},
-			[this] (const Constant<Num>& c) {
-				return expression(this->value()+c.value());
-			}
-		});
-	}
-
-	expression multiply_by(const expression& that) const override{
-		if (value() == Num(0)) return expression(0);
-		else if (value() == Num(1)) return that;
-		else return that.apply(overloaded {
-			[this] (const auto& ex) {
-				return product(*this,ex);
-			},
-			[this] (const Constant<Num>& c) {
-				return expression(this->value()*c.value());
-			}
-		});
-	}
-
 };
+
+
+template<typename Num>
+expression add(const Constant<Num>& e1, const Constant<Num>& e2) {
+	return expression(e1.value()+e2.value());
+}
+
+template<typename Num1, typename Num2>
+expression add(const Constant<Num1>& e1, const Constant<Num2>& e2) {
+	if (e1.value() == Num1(0)) return e2;
+	else if (e2.value() == Num2(0)) return e1;
+	else return multiply_default(e1,e2);
+}
+
+
+template<typename Ex, typename Num>
+expression add(const Constant<Num>& c, const Ex& e) {
+	if (c.value() == Num(0)) return e;
+	else return add_default(e,c);
+}
+
+template<typename Ex, typename Num>
+expression add(const Ex& e, const Constant<Num>& c) {
+	if (c.value() == Num(0)) return e;
+	else return add_default(e,c);
+}
+
+template<typename Num>
+expression multiply(const Constant<Num>& e1, const Constant<Num>& e2) {
+	return expression(e1.value()*e2.value());
+}
+
+template<typename Num1, typename Num2>
+expression multiply(const Constant<Num1>& e1, const Constant<Num2>& e2) {
+	if ( (e1.value() == Num1(0)) || (e2.value() == Num2(0)) ) return expression(0);
+	else if (e1.value() == Num1(1)) return e2;
+	else if (e2.value() == Num2(1)) return e1;
+	else return multiply_default(e1,e2);
+}
+
+
+template<typename Ex, typename Num>
+expression multiply(const Constant<Num>& c, const Ex& e) {
+	if (c.value() == Num(0)) return expression(0);
+	else if (c.value() == Num(1)) return e;
+	else return multiply_default(c,e);
+}
+
+template<typename Ex, typename Num>
+expression multiply(const Ex& e, const Constant<Num>& c) {
+	if (c.value() == Num(0)) return expression(0);
+	else if (c.value() == Num(1)) return e;
+	else return multiply_default(c,e);
+}
+
+
+
+
 
 }
 }

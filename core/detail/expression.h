@@ -15,8 +15,9 @@ namespace detail {
 	class Addition;
 	class Product;
 	class Symbol;
+	class ExpressionBinary;
 
-	class Expression : public VisitableBase<Expression, Visitor<Constant<int>,Constant<float>,Addition,Product,Symbol>>, public std::enable_shared_from_this<Expression> {
+	class Expression : public VisitableBase<Expression, Visitor<Constant<int>,Constant<float>,ExpressionBinary,Addition,Product,Symbol>>, public std::enable_shared_from_this<Expression> {
 	public:
 		virtual std::string to_string() const = 0;
 		virtual float evaluate() const = 0;	
@@ -25,11 +26,9 @@ namespace detail {
 		virtual expression derivative(const symbol& s) const = 0;
 		expression to_expression() const;
 		operator expression() const;
-		//Has a default behavior but can be optimized under specific circumstances
-		virtual expression add_to(const expression& that) const;
-		//Has a default behavior but can be optimized under specific circumstances
-		virtual expression multiply_by(const expression& that) const;
-
+		virtual int precedence() const {  return 10; } //Useful for showing parenthesis when the operator precedence is different than the tree-like structure
+	protected:
+		std::string subexpression_to_string(const expression& sub) const;
 	};
 }
 

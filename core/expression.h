@@ -5,7 +5,9 @@
 
 namespace sym {
 
-namespace detail {	class Symbol;	}
+namespace detail {	
+	class Symbol;	
+}
 
 // Wrapper to avoid using shared pointers all the time everywhere and for easy use
 class expression {
@@ -39,18 +41,14 @@ public:
 	}
 
 	//ADDITIONS
-	expression operator+(const expression& that) const {
-		return e_->add_to(that);
-	}
+	expression operator+(const expression& that) const;
 	template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> > 
 	expression operator+(const Num& n) const {
 		return (*this)+expression(n);
 	}
 
 	//PRODUCTS
-	expression operator*(const expression& that) const {
-		return e_->multiply_by(that);
-	}
+	expression operator*(const expression& that) const;
 	template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> > 
 	expression operator*(const Num& n) const {
 		return (*this)*expression(n);
@@ -70,13 +68,22 @@ public:
 
 	//APPLY (VISITOR STUFF FOR DOUBLE DISPATCH). WORKS SIMILAR TO STD::VISIT BUT WITH INHERITANCE.
 	template<typename F>
-	auto apply(const F& f) const { return e_->apply(f); }
+	friend auto apply(const F& f, const expression& e);
 };
 
 template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >
 expression operator+(const Num& a, const expression& b) { return b+a; }
 template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >
 expression operator*(const Num& a, const expression& b) { return b*a; }
+
+template<typename F>
+auto apply(const F& f, const expression& e) { return e.e_->apply(f); }
+
+//DOUBLE DISPACTH
+template<typename F>
+auto apply(const F& f, const expression& e1, const expression& e2) {
+	return apply([&] (const auto& e1_applied) { return apply([&] (const auto& e2_applied) { return f(e1_applied, e2_applied); },e2); }, e1);
+}
 
 std::ostream& operator<<(std::ostream& os, const expression& e);
 

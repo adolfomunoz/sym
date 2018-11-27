@@ -13,6 +13,8 @@ public:
 	const std::string& name() const { return name_; }
 };
 
+class symbol;
+
 namespace detail {
 class Symbol : public VisitableDerived<Symbol,Expression> {
 	std::string name;
@@ -29,6 +31,9 @@ public:
 	expression derivative(const symbol& s) const override {
 		if (depends_on(s)) return expression(1); else return expression(0);
 	}
+
+	symbol to_symbol() const;
+	operator symbol() const;
 };
 
 }

@@ -15,39 +15,13 @@ Expression::operator expression() const {
 	return this->to_expression();
 }
 
-expression Expression::add_to(const expression& that) const {
-	return that.apply(overloaded {
-		[this] (const auto& ex) {
-			return addition(*this,ex);
-		},
-		[this] (const Constant<int>& c) {
-			if (c.value() == 0) return this->to_expression();
-			else return addition(*this, c);
-		},
-		[this] (const Constant<float>& c) {
-			if (c.value() == 0.0f) return this->to_expression();
-			else return addition(*this, c);
-		}
-	});
+std::string Expression::subexpression_to_string(const expression& sub) const {
+	if (this->precedence()>sub.internal_pointer()->precedence()) 
+		return std::string("(")+sub.to_string()+")";
+	else
+		return sub.to_string();
 }
 
-expression Expression::multiply_by(const expression& that) const {
-	return that.apply(overloaded {
-		[this] (const auto& ex) {
-			return product(*this, ex);
-		},
-		[this] (const Constant<int>& c) {
-			if (c.value() == 0) return expression(0);
-			else if (c.value() == 1) return this->to_expression();
-			else return product(c, *this);
-		},
-		[this] (const Constant<float>& c) {
-			if (c.value() == 0.0f) return expression(0);
-			else if (c.value() == 1.0f) return this->to_expression();
-			else return product(c, *this);
-		}
-	});
-}
 
 
 
