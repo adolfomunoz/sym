@@ -16,7 +16,7 @@ Expression::operator expression() const {
 }
 
 std::string Expression::subexpression_to_string(const expression& sub) const {
-	if (this->precedence()>sub.internal_pointer()->precedence()) 
+	if (this->precedence()>=sub.internal_pointer()->precedence()) 
 		return std::string("(")+sub.to_string()+")";
 	else
 		return sub.to_string();

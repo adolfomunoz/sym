@@ -17,7 +17,6 @@ expression expression::operator*(const expression& that) const {
 	return apply([] (const auto& e1, const auto& e2) { return detail::multiply(e1,e2); },*this,that);
 }
 
-
 std::ostream& operator<<(std::ostream& os, const expression& e) {
 	os<<e.to_string();
 	return os;

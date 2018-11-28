@@ -42,13 +42,13 @@ expression add(const Constant<Num1>& e1, const Constant<Num2>& e2) {
 }
 
 
-template<typename Ex, typename Num>
+template<typename Ex, typename Num, typename = std::enable_if_t<!std::is_base_of_v<Addition,Ex>>>
 expression add(const Constant<Num>& c, const Ex& e) {
 	if (c.value() == Num(0)) return e;
 	else return add_default(e,c);
 }
 
-template<typename Ex, typename Num>
+template<typename Ex, typename Num, typename = std::enable_if_t<!std::is_base_of_v<Addition,Ex>>>
 expression add(const Ex& e, const Constant<Num>& c) {
 	if (c.value() == Num(0)) return e;
 	else return add_default(e,c);
