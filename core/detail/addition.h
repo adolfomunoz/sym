@@ -5,6 +5,10 @@
 namespace sym {
 
 namespace detail {
+
+expression add_default(const std::list<expression>& exs);
+expression add_default(const expression& e1, const expression& e2);
+
 class Addition : public VisitableDerived<Addition,ExpressionMultiple> {
 public:
 	using VisitableDerived<Addition,ExpressionMultiple>::VisitableDerived;
@@ -23,9 +27,32 @@ public:
 		return transform_accumulate_first([&] (const expression& ex) { return ex.derivative(s); }, std::plus<expression>());
 	}
 
-	expression insert(const expression& e) const {
-		return accumulate(e, std::plus<expression>());
+	expression include(const expression& e) const {
+		std::list<expression> exs = this->expressions();
+		if (exs.empty()) return e;
+		else {
+			expression first = this->expressions().front();
+			expression new_expression = (e + first);
+			exs.pop_front();
+
+			if (exs.empty()) return new_expression;
+			else return sym::apply(overloaded {
+					[&] (const auto& new_e) {
+						return new_expression + add_default(exs);
+					},
+					[&] (const Addition& new_e) {
+						expression internal = e + add_default(exs);
+						return sym::apply(overloaded {
+							[&] (const auto& internal_e) {	return add_default(first, internal); },
+							[&] (const Addition& internal_a) {
+								std::list<expression> internal_exs = internal_a.expressions();
+								internal_exs.push_front(first);
+								return add_default(internal_exs);
+							}}, internal);
+					}}, new_expression);
+		}
 	}
+
 
 	int precedence() const override { return 3; }
 };
@@ -59,39 +86,17 @@ expression add(const E1& e1, const E2& e2) {
 	return add_default(e1, e2);
 }
 
-//If left to right associativity then we explore it otherwise when accumulating
+
 template<typename E>
 expression add(const E& e, const Addition& a) {
-	return a.accumulate(e.to_expression(), std::plus<expression>());
+	return a.include(e);
 }
-
 
 template<typename E>
 expression add(const Addition& a, const E& e) {
-	std::list<expression> exs = a.expressions();
-	if (exs.empty()) return e;
-	else {
-		expression last = a.expressions().back();
-		expression new_expression = (last + e);
-		exs.pop_back();
-
-		if (exs.empty()) return new_expression;
-		else return apply(overloaded {
-				[&] (const auto& new_e) {
-					return add_default(exs) + new_expression;
-				},
-				[&] (const Addition& new_e) {
-					expression internal = add_default(exs) + e;
-					return apply(overloaded {
-						[&] (const auto& internal_e) {	return add_default(internal_e, last); },
-						[&] (const Addition& internal_a) {
-							std::list<expression> internal_exs = internal_a.expressions();
-							internal_exs.push_back(last);
-							return add_default(internal_exs);
-						}}, internal);
-				}}, new_expression);
-	}
+	return a.include(e);
 }
+
 
 inline expression add(const Addition& a1, const Addition& a2) {
 	expression s = a1;

@@ -20,6 +20,9 @@ public:
 	expression(const std::shared_ptr<const detail::Expression>& e) : e_(e) { } //Should not be used in the general case
 	expression() { } //Required by the visitable stuff but never used elsewhere. Should find a way to hide this from "public"
 
+	operator bool() const { return bool(internal_pointer()); }
+	bool empty() const { return bool(!internal_pointer()); }
+
 	//Maybe add more constant constructors later on
 	expression(int   i);
 	expression(float f);
@@ -69,6 +72,14 @@ public:
 	//APPLY (VISITOR STUFF FOR DOUBLE DISPATCH). WORKS SIMILAR TO STD::VISIT BUT WITH INHERITANCE.
 	template<typename F>
 	friend auto apply(const F& f, const expression& e);
+
+	//EQUALITY CHECK.
+	//    False if different types.
+	//    Defined in Symbol so it compares pointers.
+	//    Default behavior in the rest.
+	//    Maybe in the future compare propperly disordered additions and products (need to redefine the equality test in Addition and Product)
+	bool operator==(const expression& that) const;
+	bool operator!=(const expression& that) const { return !((*this)==that); }
 };
 
 template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >

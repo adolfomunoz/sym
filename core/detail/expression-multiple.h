@@ -45,6 +45,8 @@ public:
 				[&] (const std::string& s1, const std::string& s2) { return s1 + this->operator_symbol() + s2; });
 	}
 
+	//This is a problem, we have to define it
+	bool operator==(const ExpressionMultiple& that) const { return false; }
 
 };
 

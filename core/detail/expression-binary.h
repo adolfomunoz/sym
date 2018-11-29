@@ -20,6 +20,9 @@ public:
 	auto apply(const F& f) const {
 		return apply(f,expression1(),expression2());
 	}
+
+	//This is a problem, we have to define it
+	bool operator==(const ExpressionBinary& that) const { return false; }
 };
 
 }

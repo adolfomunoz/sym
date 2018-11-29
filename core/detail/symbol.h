@@ -31,6 +31,8 @@ public:
 	expression derivative(const symbol& s) const override {
 		if (depends_on(s)) return expression(1); else return expression(0);
 	}
+	
+	bool operator==(const Symbol& s) const { return s.shared_from_this() == this->shared_from_this(); }
 
 	symbol to_symbol() const;
 	operator symbol() const;

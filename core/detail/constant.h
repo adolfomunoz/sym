@@ -15,6 +15,9 @@ public:
 	Constant(const Num& value) : value_(value) { }
 	const Num& value() const { return value_; }
 
+	//I thought this would be defined by defaut but it seems it is not
+	bool operator==(const Constant<Num>& that) const { return this->value() == that.value(); }
+
 	std::string to_string() const override { return std::to_string(value()); }
 	float evaluate() const override { return float(value()); }
 	expression substitute(const symbol& s, const expression& e) const override {
@@ -42,13 +45,13 @@ expression add(const Constant<Num1>& e1, const Constant<Num2>& e2) {
 }
 
 
-template<typename Ex, typename Num, typename = std::enable_if_t<!std::is_base_of_v<Addition,Ex>>>
+template<typename Ex, typename Num, typename = std::enable_if_t< !std::is_base_of_v<Addition,Ex> && !std::is_base_of_v<Product,Ex> >>
 expression add(const Constant<Num>& c, const Ex& e) {
 	if (c.value() == Num(0)) return e;
 	else return add_default(e,c);
 }
 
-template<typename Ex, typename Num, typename = std::enable_if_t<!std::is_base_of_v<Addition,Ex>>>
+template<typename Ex, typename Num, typename = std::enable_if_t< !std::is_base_of_v<Addition,Ex> && !std::is_base_of_v<Product,Ex> >>
 expression add(const Ex& e, const Constant<Num>& c) {
 	if (c.value() == Num(0)) return e;
 	else return add_default(e,c);
@@ -68,14 +71,14 @@ expression multiply(const Constant<Num1>& e1, const Constant<Num2>& e2) {
 }
 
 
-template<typename Ex, typename Num>
+template<typename Ex, typename Num, typename = std::enable_if_t<!std::is_base_of_v<Product,Ex>>>
 expression multiply(const Constant<Num>& c, const Ex& e) {
 	if (c.value() == Num(0)) return expression(0);
 	else if (c.value() == Num(1)) return e;
 	else return multiply_default(c,e);
 }
 
-template<typename Ex, typename Num>
+template<typename Ex, typename Num, typename = std::enable_if_t<!std::is_base_of_v<Product,Ex>>>
 expression multiply(const Ex& e, const Constant<Num>& c) {
 	if (c.value() == Num(0)) return expression(0);
 	else if (c.value() == Num(1)) return e;
