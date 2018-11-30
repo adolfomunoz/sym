@@ -17,12 +17,14 @@ class symbol;
 
 namespace detail {
 class Symbol : public VisitableDerived<Symbol,Expression> {
-	std::string name;
+	std::string name_;
 public:
-	Symbol(const std::string& name) : name(name) { }
+	Symbol(const std::string& name) : name_(name) { }
+	const std::string& name() const { return name_; }
 
-	std::string to_string() const override { return name; }
-	float evaluate() const override { throw symbol_evaluation_error(name); }
+
+	std::string to_string() const override { return name(); }
+	virtual float evaluate() const override { throw symbol_evaluation_error(name()); }
 	
 	bool depends_on(const symbol& s) const override;
 	expression substitute(const symbol& s, const expression& e) const override {

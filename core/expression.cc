@@ -3,7 +3,9 @@
 #include "detail/addition.h"
 #include "detail/product.h"
 #include "detail/symbol.h"
-#include "detail/expression-binary.h"
+#include "detail/power.h"
+#include "detail/logarithm.h"
+#include "constants.h"
 
 namespace sym {
 
@@ -27,6 +29,22 @@ expression expression::operator+(const expression& that) const {
 
 expression expression::operator*(const expression& that) const {
 	return apply([] (const auto& e1, const auto& e2) { return detail::multiply(e1,e2); },*this,that);
+}
+
+expression pow(const expression& base, const expression& exponent) {
+	return apply([] (const auto& e1, const auto& e2) { return detail::pow(e1,e2); },base,exponent);
+}
+
+expression log(const expression& base, const expression& number) {
+	return apply([] (const auto& e1, const auto& e2) { return detail::log(e1,e2); },base,number);
+}
+
+expression expression::operator/(const expression& that) const {
+	return (*this)*pow(that,-1);
+}
+
+expression ln(const expression& number) {
+	return log(sym::e,number);
 }
 
 std::ostream& operator<<(std::ostream& os, const expression& e) {
