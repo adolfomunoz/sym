@@ -24,12 +24,12 @@ public:
 
 	//Missing derivative because we need logarithms for that
 	expression derivative(const symbol& s) const override {
-		return exponent()*sym::pow(base(),exponent()-1)*base().derivative(s)+sym::pow(base(),exponent())*sym::ln(base())*exponent().derivative(s);
+		return exponent()*sym::pow(base(),exponent()-1)*base().derivative(s) + sym::pow(base(),exponent())*sym::ln(base())*exponent().derivative(s);
 	}	
 };
 
 
-expression pow_default(const expression& base, const expression& exponent) {
+inline expression pow_default(const expression& base, const expression& exponent) {
 	return expression(std::make_shared<Power>(base,exponent));
 }
 

@@ -97,6 +97,19 @@ expression add(const Addition& a, const E& e) {
 	return a.include(e);
 }
 
+template<typename Num>
+expression add(const Constant<Num>& c, const Addition& a) {
+	if (c.value()==0) return a;
+	else return a.include(c);
+}
+
+template<typename Num>
+expression add(const Addition& a, const Constant<Num>& c) {
+	if (c.value()==0) return a;
+	else return a.include(c);
+}
+
+
 
 inline expression add(const Addition& a1, const Addition& a2) {
 	expression s = a1;

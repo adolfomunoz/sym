@@ -139,6 +139,18 @@ expression add(const Product& p, const E& e) {
 	}
 }
 
+template<typename Num>
+expression add(const Product& p, const Constant<Num>& c) {
+	if (c.value()==0) return p;
+	else return add_default(p,c);
+}
+
+template<typename Num>
+expression add(const Constant<Num>& c, const Product& p) {
+	if (c.value()==0) return p;
+	else return add_default(p,c);
+}
+
 template<typename E, typename = std::enable_if_t<!std::is_base_of_v<Addition,E>>>
 expression add(const E& e, const Product& p) {
 	return add(p,e);
