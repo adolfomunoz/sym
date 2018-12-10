@@ -25,7 +25,19 @@ public:
 	expression derivative(const symbol& s) const override {
 		//We apply the quotient rule over the division of natural logarithms
 		return number().derivative(s)/(number()*sym::ln(base())) - sym::ln(number())*base().derivative(s)/(base()*sym::pow(sym::ln(base()),2));
-	}	
+	}
+
+	expression inverse(const symbol& in, const expression& out) const override {
+		if (base().depends_on(in)) {
+			if (number().depends_on(in)) throw not_invertible_error(*this,in);
+			else {
+				return base().inverse(in, sym::pow(out, number()));
+			}
+		} else if (number().depends_on(in)) {
+			return number().inverse(in, sym::pow(base(), out));
+		} else throw not_invertible_error(*this, in);
+	}
+
 };
 
 
@@ -36,7 +48,7 @@ expression log_default(const expression& base, const expression& number) {
 
 template<typename E1, typename E2>
 expression log(const E1& base, const E2& number) {
-	return pow_default(base,number);
+	return log_default(base,number);
 }
 
 

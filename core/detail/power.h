@@ -22,10 +22,24 @@ public:
 		return sym::pow(expression1().substitute(s,e), expression2().substitute(s,e));
 	}
 
-	//Missing derivative because we need logarithms for that
 	expression derivative(const symbol& s) const override {
 		return exponent()*sym::pow(base(),exponent()-1)*base().derivative(s) + sym::pow(base(),exponent())*sym::ln(base())*exponent().derivative(s);
-	}	
+	}
+
+
+	expression inverse(const symbol& in, const expression& out) const override {
+		if (base().depends_on(in)) {
+			if (exponent().depends_on(in)) throw not_invertible_error(*this,in);
+			else {
+				return base().inverse(in, sym::pow(out, -exponent()));
+			}
+		} else if (exponent().depends_on(in)) {
+			return exponent().inverse(in, sym::log(base(), out));
+		} else throw not_invertible_error(*this, in);
+	}
+	
+
+
 };
 
 

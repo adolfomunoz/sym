@@ -33,6 +33,7 @@ public:
 	expression derivative(const symbol& s) const override {
 		if (depends_on(s)) return expression(1); else return expression(0);
 	}
+	expression inverse(const symbol& in, const expression& out) const override;
 	
 	bool operator==(const Symbol& s) const { return s.shared_from_this() == this->shared_from_this(); }
 

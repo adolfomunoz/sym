@@ -32,6 +32,10 @@ public:
 	bool depends_on(const symbol& s) const {
 		return e_->depends_on(s);
 	}
+
+	expression inverse(const symbol& in, const expression& out) const {
+		return e_->inverse(in, out);
+	}
 	
 	expression derivative(const symbol& s) const { return e_->derivative(s); }
 	//SUBSTITUTIONS
@@ -72,6 +76,28 @@ public:
 	//DIVISION
 	expression operator/(const expression& that) const;
 
+	//This is for comfort but somehow breaks the "functional" aspect of everything. Still, it is used (although it is
+	//not optimal).
+	template<typename That>
+	expression& operator+=(const That& that) {
+		(*this) = (*this) + that;
+		return (*this);
+	}
+	template<typename That>
+	expression& operator-=(const That& that) {
+		(*this) = (*this) - that;
+		return (*this);
+	}
+	template<typename That>
+	expression& operator*=(const That& that) {
+		(*this) = (*this) * that;
+		return (*this);
+	}
+	template<typename That>
+	expression& operator/=(const That& that) {
+		(*this) = (*this) / that;
+		return (*this);
+	}
 	
 	//APPLY (VISITOR STUFF FOR DOUBLE DISPATCH). WORKS SIMILAR TO STD::VISIT BUT WITH INHERITANCE.
 	template<typename F>
@@ -85,6 +111,8 @@ public:
 	bool operator==(const expression& that) const;
 	bool operator!=(const expression& that) const { return !((*this)==that); }
 };
+
+
 
 template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >
 expression operator+(const Num& a, const expression& b) { return b+a; }

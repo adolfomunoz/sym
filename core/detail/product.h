@@ -34,6 +34,26 @@ public:
 		return der;
 	}
 
+	expression inverse(const symbol& in, const expression& out) const override {
+		std::list<expression>::const_iterator i, to_invert; bool found = false;
+		for (i = expressions().begin(); i != expressions().end(); ++i) {
+			if ((*i).depends_on(in)) {
+				if (!found) {
+					to_invert = i;
+					found = true;
+				} else throw not_invertible_error(*this,in);
+			}	
+		}
+		if (!found) throw not_invertible_error(*this,in);
+		else {
+			expression inverted = out; 
+			for (i = expressions().begin(); i != expressions().end(); ++i)
+				if (i != to_invert) inverted /= (*i);
+			return (*to_invert).inverse(in, inverted);
+		}	
+	}
+
+
 	expression include(const expression& e) const {
 		std::list<expression> exs = this->expressions();
 		if (exs.empty()) return e;
@@ -59,6 +79,8 @@ public:
 					}}, new_expression);
 		}
 	}
+
+
 
 
 	int precedence() const override { return 4; }

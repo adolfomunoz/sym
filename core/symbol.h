@@ -16,4 +16,16 @@ public:
 	//operator== compares pointers, which is what we want.
 };
 
+class not_invertible_error : public std::runtime_error {
+	expression ex_;
+	symbol s_;
+public:
+	not_invertible_error(const expression& ex, const symbol& s):
+		std::runtime_error(ex.to_string()+" is not invertible with respect to "+s.to_string()), ex_(ex), s_(s) { }
+	
+	const expression& ex() const { return ex_; }
+	const symbol& s() const { return s_; }
+};
+
+
 }

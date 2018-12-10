@@ -23,7 +23,7 @@ std::string Expression::subexpression_to_string(const expression& sub) const {
 }
 
 
-
+expression Expression::inverse(const symbol& in, const expression& out) const { throw not_invertible_error(this->to_expression(), in); }
 
 }
 }

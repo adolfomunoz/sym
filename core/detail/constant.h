@@ -102,10 +102,26 @@ expression pow(const Constant<Num>& c, const E& e) {
 
 template<typename Num>
 expression pow(const Constant<Num>& b, const Constant<int>& e) {
-	Num pot = Num(1);
-	for (int i = 0; i<e.value(); ++i) pot *= b.value();
-	return expression(pot);
+	if (e.value() >= 0) {
+		Num pot = Num(1);
+		for (int i = 0; i<e.value(); ++i) pot *= b.value();
+		return expression(pot);
+	} else {
+		Num pot = Num(1);
+		for (int i = 0; i>e.value(); --i) pot /= b.value();
+		return expression(pot);
+	}	
 }
+
+inline expression pow(const Constant<int>& b, const Constant<int>& e) {
+	if (e.value() >= 0) {
+		int pot = 1; 
+		//Maybe we could check here for overflow and leave the expression intact if there is overflow.
+		for (int i = 0; i<e.value(); ++i) pot *= b.value();
+		return expression(pot);
+	} else return pow_default(b,e);
+}
+
 
 template<typename Num>
 expression pow(const Constant<Num>& b, const Constant<float>& e) {

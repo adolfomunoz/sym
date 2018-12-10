@@ -5,6 +5,7 @@
 #include <functional>
 #include <algorithm>
 #include <numeric>
+#include "../symbol.h"
 
 namespace sym {
 
