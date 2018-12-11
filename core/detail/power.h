@@ -1,6 +1,7 @@
 #pragma once
 
 #include "expression-binary.h"
+#include "logarithm.h"
 #include <cmath>
 
 namespace sym {
@@ -51,6 +52,30 @@ template<typename E1, typename E2>
 expression pow(const E1& base, const E2& exponent) {
 	return pow_default(base,exponent);
 }
+
+template<typename E>
+expression log(const E& base, const Power& p) {
+	if (base == p.base()) return p.exponent();
+	else return log_default(base,p);
+}
+
+template<typename E>
+expression pow(const E& base, const Logarithm& l) {
+	if (base == l.base()) return l.number();
+	else return pow_default(base,l);
+}
+
+template<typename E>
+expression pow(const Logarithm& l, const E& e) {
+	return e*l;
+}
+
+template<typename E>
+expression pow(const Power& p, const E& exponent) {
+	return pow(p.base(),exponent*p.exponent());
+}
+
+
 
 template<typename E>
 expression multiply(const E& e1, const E& e2) {

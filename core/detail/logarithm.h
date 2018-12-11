@@ -1,6 +1,7 @@
 #pragma once
 
 #include "expression-binary.h"
+#include "product.h"
 #include <cmath>
 
 namespace sym {
@@ -41,14 +42,22 @@ public:
 };
 
 
-expression log_default(const expression& base, const expression& number) {
-	return expression(std::make_shared<Logarithm>(base,number));
+inline expression log_default(const expression& base, const expression& number) {
+	if (base == number) return expression(1);
+	else return expression(std::make_shared<Logarithm>(base,number));
 }
 
 
 template<typename E1, typename E2>
 expression log(const E1& base, const E2& number) {
 	return log_default(base,number);
+}
+
+template<typename E>
+expression log(const E& base, const Product& number) {
+	expression sol = 0;
+	for (expression e : number.expressions()) sol += log(base,e);
+	return sol;
 }
 
 

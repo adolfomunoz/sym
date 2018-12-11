@@ -128,6 +128,18 @@ expression pow(const Constant<Num>& b, const Constant<float>& e) {
 	return expression(float(std::pow(b.value(),e.value())));
 }
 
+template<typename E, typename Num>
+expression log(const E& base, const Constant<Num>& c) {
+	if (c.value() == Num(1)) return expression(0);
+	else return log_default(base,c);
+}
+
+//We just precalculate logarithms with floating point preccision. With integers we do not.
+inline expression log(const Constant<float>& b, const Constant<float>& n) {
+	return expression(std::log(n.value())/std::log(b.value()));
+}
+
+
 
 
 
