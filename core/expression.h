@@ -39,11 +39,11 @@ public:
 	
 	expression derivative(const symbol& s) const { return e_->derivative(s); }
 	//SUBSTITUTIONS
-	expression substitute(const symbol& s, const expression& e) const {
-		return expression(e_->substitute(s,e));
+	expression substitute(const expression& source, const expression& replacement) const {
+		if ((*this)==source) return replacement; else return expression(e_->substitute(source,replacement));
 	}
 	template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> > 
-	expression substitute(const symbol& s, const Num& n) const {
+	expression substitute(const expression& s, const Num& n) const {
 		return substitute(s,expression(n));
 	}
 

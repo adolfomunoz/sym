@@ -21,9 +21,10 @@ public:
 
 	std::string to_string() const override { return std::to_string(value()); }
 	float evaluate() const override { return float(value()); }
-	expression substitute(const symbol& s, const expression& e) const override {
+	//vv This is already done by default vv
+/*	expression substitute(const symbol& s, const expression& e) const override {
 		return expression(value()); 
-	}
+	}*/
 	expression derivative(const symbol& s) const override {
 		return expression(0);
 	}

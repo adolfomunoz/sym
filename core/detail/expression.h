@@ -26,11 +26,13 @@ namespace detail {
 		virtual std::string to_string() const = 0;
 		virtual float evaluate() const = 0;	
 		virtual bool depends_on(const symbol& s) const = 0;
-		virtual expression substitute(const symbol& s, const expression& e) const = 0;
 		virtual expression derivative(const symbol& s) const = 0;
 		virtual expression inverse(const symbol& in, const expression& out) const; 
 		expression to_expression() const;
 		operator expression() const;
+
+		//By default it does nothing (returns itself)
+		virtual expression substitute(const expression& source, const expression& replacement) const;
 		virtual int precedence() const {  return 10; } //Useful for showing parenthesis when the operator precedence is different than the tree-like structure
 	protected:
 		std::string subexpression_to_string(const expression& sub) const;

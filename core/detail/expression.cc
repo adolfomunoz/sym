@@ -25,5 +25,11 @@ std::string Expression::subexpression_to_string(const expression& sub) const {
 
 expression Expression::inverse(const symbol& in, const expression& out) const { throw not_invertible_error(this->to_expression(), in); }
 
+expression Expression::substitute(const expression& source, const expression& replacement) const {
+	//By default it does nothing (returns itself)
+	return to_expression();
+}
+
+
 }
 }

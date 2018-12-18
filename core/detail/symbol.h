@@ -27,9 +27,11 @@ public:
 	virtual float evaluate() const override { throw symbol_evaluation_error(name()); }
 	
 	bool depends_on(const symbol& s) const override;
-	expression substitute(const symbol& s, const expression& e) const override {
+	
+	//vv This is already done by default vv
+/*	expression substitute(const symbol& s, const expression& e) const override {
 		if (depends_on(s)) return e; else return *this;
-	}
+	}*/
 	expression derivative(const symbol& s) const override {
 		if (depends_on(s)) return expression(1); else return expression(0);
 	}

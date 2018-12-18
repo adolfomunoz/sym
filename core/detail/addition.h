@@ -19,7 +19,7 @@ public:
 		return transform_accumulate(0.0f, [] (const expression& ex) { return ex.evaluate(); }, std::plus<float>());
 	}
 	
-	expression substitute(const symbol& s, const expression& e) const override {
+	expression substitute(const expression& s, const expression& e) const override {
 		return transform_accumulate_first([&] (const expression& ex) { return ex.substitute(s,e); }, std::plus<expression>());
 	}
 

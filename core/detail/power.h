@@ -19,7 +19,7 @@ public:
 		return std::pow(base().evaluate(), exponent().evaluate());
 	}
 
-	expression substitute(const symbol& s, const expression& e) const override {
+	expression substitute(const expression& s, const expression& e) const override {
 		return sym::pow(expression1().substitute(s,e), expression2().substitute(s,e));
 	}
 

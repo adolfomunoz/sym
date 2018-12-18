@@ -19,7 +19,7 @@ public:
 		return std::log(number().evaluate())/std::log(base().evaluate());
 	}
 
-	expression substitute(const symbol& s, const expression& e) const override {
+	expression substitute(const expression& s, const expression& e) const override {
 		return sym::log(expression1().substitute(s,e), expression2().substitute(s,e));
 	}
 
