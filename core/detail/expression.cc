@@ -3,6 +3,8 @@
 #include "product.h"
 #include "constant.h"
 #include "symbol.h"
+#include "power.h"
+#include "logarithm.h"
 
 namespace sym {
 namespace detail {

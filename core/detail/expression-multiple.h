@@ -10,7 +10,7 @@
 namespace sym {
 
 namespace detail {
-class ExpressionMultiple : public VisitableDerived<ExpressionMultiple,Expression> {
+class ExpressionMultiple : public Expression {
 	std::list<expression> exs_;
 public:
 	ExpressionMultiple(std::initializer_list<expression> l) : exs_(l) { }
@@ -46,8 +46,10 @@ public:
 				[&] (const std::string& s1, const std::string& s2) { return s1 + this->operator_symbol() + s2; });
 	}
 
-	//This is a problem, we have to define it
-	bool operator==(const ExpressionMultiple& that) const { return false; }
+	//This is a problem, we have to improve it (it only works when both types are the same)
+	bool operator==(const ExpressionMultiple& that) const { 
+		return this->expressions()==that.expressions();
+       	}
 
 };
 

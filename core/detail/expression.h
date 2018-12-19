@@ -18,10 +18,10 @@ namespace detail {
 	class Addition;
 	class Product;
 	class Symbol;
-	class ExpressionBinary;
-	class ExpressionMultiple;
+	class Power;
+	class Logarithm;
 
-	class Expression : public VisitableBase<Expression, Visitor<Constant<int>,Constant<float>,ExpressionBinary,ExpressionMultiple,Addition,Product,Symbol>>, public std::enable_shared_from_this<Expression> {
+	class Expression : public VisitableBase<Expression, Visitor<Constant<int>,Constant<float>,Addition,Product,Power,Logarithm,Symbol>>, public std::enable_shared_from_this<Expression> {
 	public:
 		virtual std::string to_string() const = 0;
 		virtual float evaluate() const = 0;	

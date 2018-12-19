@@ -5,7 +5,7 @@
 namespace sym {
 
 namespace detail {
-class ExpressionBinary : public VisitableDerived<ExpressionBinary,Expression> {
+class ExpressionBinary : public Expression {
 	expression e1_, e2_;
 public:
 	ExpressionBinary(const expression& e1, const expression& e2) : e1_(e1), e2_(e2) { }
@@ -21,8 +21,10 @@ public:
 		return apply(f,expression1(),expression2());
 	}
 
-	//This is a problem, we have to define it
-	bool operator==(const ExpressionBinary& that) const { return false; }
+	//This is a problem, we have to improve it (it only works when both types are the same)
+	bool operator==(const ExpressionBinary& that) const { 
+		return (this->expression1()==that.expression1()) && (this->expression2()==that.expression2());
+       	}
 };
 
 }

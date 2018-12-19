@@ -5,6 +5,7 @@
 #include "addition.h"
 #include "product.h"
 #include "power.h"
+#include "logarithm.h"
 
 namespace sym {
 
@@ -87,8 +88,8 @@ expression multiply(const Ex& e, const Constant<Num>& c) {
 	else return multiply_default(c,e);
 }
 
-template<typename E, typename Num>
-expression pow(const E& e, const Constant<Num>& c) {
+template<typename E, typename Num, typename = std::enable_if_t<!std::is_base_of_v<E,Logarithm>>, typename = std::enable_if_t<!std::is_base_of_v<E,Power>>>
+expression pow(const E& e, const Constant<Num>& c) { 
 	if (c.value() == Num(0)) return expression(1);
 	else if (c.value() == Num(1)) return e;
 	else return pow_default(e,c);
