@@ -75,6 +75,8 @@ public:
 
 	//DIVISION
 	expression operator/(const expression& that) const;
+	template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> > 
+	expression operator/(const Num& n) const { return (*this)/expression(n); }
 
 	//This is for comfort but somehow breaks the "functional" aspect of everything. Still, it is used (although it is
 	//not optimal).
@@ -117,22 +119,31 @@ public:
 template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >
 expression operator+(const Num& a, const expression& b) { return b+a; }
 template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >
+expression operator-(const Num& a, const expression& b) { return -b+a; }
+template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >
 expression operator*(const Num& a, const expression& b) { return b*a; }
+template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >
+expression operator/(const Num& a, const expression& b) { return expression(a)/b; }
 
 expression pow(const expression& base, const expression& exponent);
 
 template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >
-inline expression pow(const expression& base, const Num& n) {
+expression pow(const expression& base, const Num& n) {
 	return pow(base, expression(n));
 }
 
 template<typename Num, typename = std::enable_if_t<std::is_floating_point_v<Num> || std::is_integral_v<Num>> >
-inline expression pow(const Num& n, const expression& exponent) {
+expression pow(const Num& n, const expression& exponent) {
 	return pow(expression(n), exponent);
 }
 
 expression log(const expression& base, const expression& number);
 expression ln(const expression& number);
+
+expression sin(const expression& e);
+expression cos(const expression& e);
+expression asin(const expression& e);
+expression acos(const expression& e);
 
 template<typename F>
 auto apply(const F& f, const expression& e) { return e.e_->apply(f); }

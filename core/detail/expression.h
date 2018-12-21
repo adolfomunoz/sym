@@ -10,8 +10,6 @@ namespace sym {
 class symbol;
 class expression;
 
-
-
 namespace detail {
 	template<typename Num>
 	class Constant;
@@ -20,8 +18,12 @@ namespace detail {
 	class Symbol;
 	class Power;
 	class Logarithm;
+	class Sin;
+	class Cos;
+	class Asin;
+	class Acos;
 
-	class Expression : public VisitableBase<Expression, Visitor<Constant<int>,Constant<float>,Addition,Product,Power,Logarithm,Symbol>>, public std::enable_shared_from_this<Expression> {
+	class Expression : public VisitableBase<Expression, Visitor<Constant<int>,Constant<float>,Addition,Product,Power,Logarithm,Symbol,Sin,Cos,Asin,Acos>>, public std::enable_shared_from_this<Expression> {
 	public:
 		virtual std::string to_string() const = 0;
 		virtual float evaluate() const = 0;	

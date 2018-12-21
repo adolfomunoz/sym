@@ -27,4 +27,7 @@ int main(int argc, char** argv) {
 	show(x,y,sym::pow(sym::e,x));
 	show(x,y,sym::log(x,a));
 	show(x,y,sym::log(sym::e,x));
+	show(x,y,sym::cos(x));
+	show(x,y,sym::sin(a*x));
+	show(x,y,sym::pow(sym::sin(x),a));
 }

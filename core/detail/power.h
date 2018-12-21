@@ -32,7 +32,7 @@ public:
 		if (base().depends_on(in)) {
 			if (exponent().depends_on(in)) throw not_invertible_error(*this,in);
 			else {
-				return base().inverse(in, sym::pow(out, -exponent()));
+				return base().inverse(in, sym::pow(out, 1/exponent()));
 			}
 		} else if (exponent().depends_on(in)) {
 			return exponent().inverse(in, sym::log(base(), out));

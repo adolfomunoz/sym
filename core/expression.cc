@@ -5,6 +5,10 @@
 #include "detail/symbol.h"
 #include "detail/power.h"
 #include "detail/logarithm.h"
+#include "detail/sin.h"
+#include "detail/cos.h"
+#include "detail/asin.h"
+#include "detail/acos.h"
 #include "constants.h"
 
 namespace sym {
@@ -37,6 +41,22 @@ expression pow(const expression& base, const expression& exponent) {
 
 expression log(const expression& base, const expression& number) {
 	return apply([] (const auto& e1, const auto& e2) { return detail::log(e1,e2); },base,number);
+}
+
+expression sin(const expression& ex) {
+	return apply([] (const auto& e) { return detail::sin(e); },ex);
+}
+
+expression cos(const expression& ex) {
+	return apply([] (const auto& e) { return detail::cos(e); },ex);
+}
+
+expression asin(const expression& ex) {
+	return apply([] (const auto& e) { return detail::asin(e); },ex);
+}
+
+expression acos(const expression& ex) {
+	return apply([] (const auto& e) { return detail::acos(e); },ex);
 }
 
 expression expression::operator/(const expression& that) const {
