@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(sym)
 
-###################################################################################
+####################################################################
 # COMPILER FLAGS
-###################################################################################
+####################################################################
 
 # Set a default build type for single-configuration
 # CMake generators if no build type is set.
@@ -37,32 +37,43 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
    message(STATUS "D.Flags   = ${CMAKE_CXX_FLAGS_DEBUG}")
 endif()
 
-######################################################################################
+####################################################################
 # PATHS
-######################################################################################
+####################################################################
 if (NOT EXECUTABLE_OUTPUT_PATH)
 	set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+endif()
+if (NOT ARCHIVE_OUTPUT_DIRECTORY)
+	set(ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 endif()
 
 if (NOT IS_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
 	file(MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
 endif()
+if (NOT IS_DIRECTORY ${ARCHIVE_OUTPUT_DIRECTORY})
+	file(MAKE_DIRECTORY ${ARCHIVE_OUTPUT_DIRECTORY})
+endif()
 
 #Basic include directory
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
-######################################################################################
+####################################################################
 # SOURCE FILES
-######################################################################################
+####################################################################
 set(srcs_sym 
 	${CMAKE_CURRENT_LIST_DIR}/core/expression.cc
 	${CMAKE_CURRENT_LIST_DIR}/core/detail/expression.cc
 	${CMAKE_CURRENT_LIST_DIR}/core/detail/symbol.cc
 )
 
-###################################################################################
+####################################################################
+# LIBRARY TARGETS
+####################################################################
+add_library(sym STATIC ${srcs_sym})
+
+####################################################################
 # USEFUL FUNCTIONS
-###################################################################################
+####################################################################
 function(add_subdirectories_and_compile directory)
 	file(GLOB children ${directory}/*)
 	get_filename_component(dir ${directory} NAME)
@@ -70,7 +81,8 @@ function(add_subdirectories_and_compile directory)
 		get_filename_component(child ${fullchild} NAME)
 		if(IS_DIRECTORY ${fullchild})
 			if (EXISTS ${fullchild}/${child}.cc)
-				add_executable(${CMAKE_PROJECT_NAME}-${dir}-${child} ${srcs_sym} ${fullchild}/${child}.cc)
+				add_executable(${CMAKE_PROJECT_NAME}-${dir}-${child} ${fullchild}/${child}.cc)
+				target_link_libraries(${CMAKE_PROJECT_NAME}-${dir}-${child} sym)
 			else()
 				add_subdirectory(${fullchild})
 			endif()
@@ -78,8 +90,7 @@ function(add_subdirectories_and_compile directory)
 	endforeach()
 endfunction(add_subdirectories_and_compile)
 
-###################################################################################
-# TARGETS
-###################################################################################
-
+####################################################################
+# EXECUTABLE TARGETS
+####################################################################
 add_subdirectories_and_compile(main/examples)
