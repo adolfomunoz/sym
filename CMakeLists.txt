@@ -102,3 +102,4 @@ endfunction(add_subdirectories_and_compile)
 # EXECUTABLE TARGETS
 ####################################################################
 add_subdirectories_and_compile(main/examples)
+add_subdirectories_and_compile(main/test)
