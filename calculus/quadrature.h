@@ -19,19 +19,19 @@ float integral(const expression& f, const symbol& x, float a, float b, unsigned 
 float integral(const expression& f, const symbol& x, const MinusInfinity& a, const Infinity& b, unsigned int nsamples = 100)
 {
 	symbol t("t");
-	return integral(f.substitute(x,t/(1-t*t))*(1+t*t)/pow(1-t*t,2),t,-1,1,nsamples);
+	return integral(f.substitute(x,t/(1-t*t))*(1+t*t)/pow(1-t*t,2),t,-0.999999f,0.999999f,nsamples);
 }
 
 float integral(const expression& f, const symbol& x, float a, const Infinity& b, unsigned int nsamples = 100)
 {
 	symbol t("t");
-	return integral(f.substitute(x,a + t/(1-t))/pow(1-t,2),t,0,1,nsamples);
+	return integral(f.substitute(x,a + t/(1-t))/pow(1-t,2),t,0,0.999999f,nsamples);
 }
 
 float integral(const expression& f, const symbol& x, const MinusInfinity& a, float b, unsigned int nsamples = 100)
 {
 	symbol t("t");
-	return integral(f.substitute(x,b - (1 - t)/t)/pow(t,2),t,0,1,nsamples);
+	return integral(f.substitute(x,b - (1 - t)/t)/pow(t,2),t,0,0.999999f,nsamples);
 }
 
 

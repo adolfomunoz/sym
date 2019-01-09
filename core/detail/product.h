@@ -14,7 +14,7 @@ public:
 	using VisitableDerived<Product,ExpressionMultiple>::VisitableDerived;
 	
 	float evaluate() const override { 
-		return transform_accumulate(0.0f, [] (const expression& ex) { return ex.evaluate(); }, std::multiplies<float>());
+		return transform_accumulate(1.0f, [] (const expression& ex) { return ex.evaluate(); }, std::multiplies<float>());
 	}
 
 	expression substitute(const expression& source, const expression& replacement) const override {
