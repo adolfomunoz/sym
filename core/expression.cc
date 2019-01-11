@@ -9,6 +9,7 @@
 #include "detail/cos.h"
 #include "detail/asin.h"
 #include "detail/acos.h"
+#include "detail/id.h"
 #include "constants.h"
 
 namespace sym {
@@ -66,6 +67,11 @@ expression expression::operator/(const expression& that) const {
 expression ln(const expression& number) {
 	return log(sym::e,number);
 }
+
+expression id(const expression& e) {
+	return expression(std::make_shared<detail::Id>(e));
+}
+
 
 std::ostream& operator<<(std::ostream& os, const expression& e) {
 	os<<e.to_string();

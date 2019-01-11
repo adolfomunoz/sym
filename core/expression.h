@@ -144,6 +144,7 @@ expression sin(const expression& e);
 expression cos(const expression& e);
 expression asin(const expression& e);
 expression acos(const expression& e);
+expression id(const expression& e);
 
 template<typename F>
 auto apply(const F& f, const expression& e) { return e.e_->apply(f); }

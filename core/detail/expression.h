@@ -22,8 +22,9 @@ namespace detail {
 	class Cos;
 	class Asin;
 	class Acos;
+	class Id;
 
-	class Expression : public VisitableBase<Expression, Visitor<Constant<int>,Constant<float>,Addition,Product,Power,Logarithm,Symbol,Sin,Cos,Asin,Acos>>, public std::enable_shared_from_this<Expression> {
+	class Expression : public VisitableBase<Expression, Visitor<Constant<int>,Constant<float>,Addition,Product,Power,Logarithm,Symbol,Sin,Cos,Asin,Acos,Id>>, public std::enable_shared_from_this<Expression> {
 	public:
 		virtual std::string to_string() const = 0;
 		virtual float evaluate() const = 0;	
