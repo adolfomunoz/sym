@@ -112,6 +112,20 @@ public:
 	//    Maybe in the future compare propperly disordered additions and products (need to redefine the equality test in Addition and Product)
 	bool operator==(const expression& that) const;
 	bool operator!=(const expression& that) const { return !((*this)==that); }
+
+	auto as_function_of(const expression& x) {
+		return [*this,x] (float px) { return (*this).substitute(x,px).evaluate(); };
+	}
+
+	auto as_function_of(const expression& x, const expression& y) {
+		return [*this,x,y] (float px,float py) { return (*this).substitute(x,px).substitute(y,py).evaluate(); };
+	}
+
+	auto as_function_of(const expression& x, const expression& y, const expression& z) {
+		return [*this,x,y,z] (float px,float py,float pz) { return (*this).substitute(x,px).substitute(y,py).substitute(z,pz).evaluate(); };
+	}
+
+
 };
 
 
