@@ -16,6 +16,7 @@ namespace sym {
 
 expression::expression(int i)   : expression::expression(std::make_shared<detail::Constant<int>>(i)) { }
 expression::expression(float f) : expression::expression(std::make_shared<detail::Constant<float>>(f)) { }
+expression::expression(double d) : expression::expression(std::make_shared<detail::Constant<float>>(d)) { }
  
 struct EqualityTest {
 	template<typename T>
@@ -67,6 +68,15 @@ expression expression::operator/(const expression& that) const {
 expression ln(const expression& number) {
 	return log(sym::e,number);
 }
+
+expression exp(const expression& number) {
+	return pow(sym::e,number);
+}
+
+expression sqrt(const expression& number) {
+	return pow(number,expression(1)/2);
+}
+
 
 expression id(const expression& e) {
 	return expression(std::make_shared<detail::Id>(e));

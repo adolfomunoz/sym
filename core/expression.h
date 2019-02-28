@@ -26,6 +26,8 @@ public:
 	//Maybe add more constant constructors later on
 	expression(int   i);
 	expression(float f);
+	//vv This one reduces the precission to float 
+	expression(double d);
 
 	std::string to_string() const { return e_->to_string(); }
 	float evaluate() const { return e_->evaluate(); }
@@ -113,15 +115,15 @@ public:
 	bool operator==(const expression& that) const;
 	bool operator!=(const expression& that) const { return !((*this)==that); }
 
-	auto as_function_of(const expression& x) {
+	auto as_function_of(const expression& x) const {
 		return [*this,x] (float px) { return (*this).substitute(x,px).evaluate(); };
 	}
 
-	auto as_function_of(const expression& x, const expression& y) {
+	auto as_function_of(const expression& x, const expression& y) const {
 		return [*this,x,y] (float px,float py) { return (*this).substitute(x,px).substitute(y,py).evaluate(); };
 	}
 
-	auto as_function_of(const expression& x, const expression& y, const expression& z) {
+	auto as_function_of(const expression& x, const expression& y, const expression& z) const {
 		return [*this,x,y,z] (float px,float py,float pz) { return (*this).substitute(x,px).substitute(y,py).substitute(z,pz).evaluate(); };
 	}
 
@@ -153,6 +155,8 @@ expression pow(const Num& n, const expression& exponent) {
 
 expression log(const expression& base, const expression& number);
 expression ln(const expression& number);
+expression exp(const expression& number);
+expression sqrt(const expression& number);
 
 expression sin(const expression& e);
 expression cos(const expression& e);
