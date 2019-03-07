@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <vector>
 #include "detail/expression.h"
 #include <iostream>
 
@@ -133,9 +134,24 @@ public:
 		return [*this,c] (const std::array<float,N>& p) {
 			expression e = (*this);
 			typename std::array<expression,N>::const_iterator ic;
-		        typename std::array<float,N>::const_iterator ip;
-			for (ic = c.begin(), ip = p.begin(); (ic != c.end()) && (ip != p.end()); ++ic, ++ip)
-			       e = e.substitute(*ic, *ip);
+			typename std::array<float,N>::const_iterator ip;
+			for (ic = c.begin(), ip = p.begin(); 
+				(ic != c.end()) && (ip != p.end()); 
+				++ic, ++ip)
+					e = e.substitute(*ic, *ip);
+			return e.evaluate();	
+		};
+	}
+	
+	auto as_function_of(const std::vector<expression>& c) const {
+		return [*this,c] (const std::vector<float>& p) {
+			expression e = (*this);
+			typename std::vector<expression>::const_iterator ic;
+			typename std::vector<float>::const_iterator ip;
+			for (ic = c.begin(), ip = p.begin(); 
+				(ic != c.end()) && (ip != p.end()); 
+				++ic, ++ip)
+					e = e.substitute(*ic, *ip);
 			return e.evaluate();	
 		};
 	}
