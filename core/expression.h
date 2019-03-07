@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include "detail/expression.h"
 #include <iostream>
 
@@ -127,6 +128,17 @@ public:
 		return [*this,x,y,z] (float px,float py,float pz) { return (*this).substitute(x,px).substitute(y,py).substitute(z,pz).evaluate(); };
 	}
 
+	template<std::size_t N>
+	auto as_function_of(const std::array<expression,N>& c) const {
+		return [*this,c] (const std::array<float,N>& p) {
+			expression e = (*this);
+			typename std::array<expression,N>::const_iterator ic;
+		        typename std::array<float,N>::const_iterator ip;
+			for (ic = c.begin(), ip = p.begin(); (ic != c.end()) && (ip != p.end()); ++ic, ++ip)
+			       e = e.substitute(*ic, *ip);
+			return e.evaluate();	
+		};
+	}
 
 };
 
