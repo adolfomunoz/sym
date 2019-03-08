@@ -1,7 +1,5 @@
 #pragma once
 
-#include <array>
-#include <vector>
 #include "detail/expression.h"
 #include <iostream>
 
@@ -116,46 +114,6 @@ public:
 	//    Maybe in the future compare propperly disordered additions and products (need to redefine the equality test in Addition and Product)
 	bool operator==(const expression& that) const;
 	bool operator!=(const expression& that) const { return !((*this)==that); }
-
-	auto as_function_of(const expression& x) const {
-		return [*this,x] (float px) { return (*this).substitute(x,px).evaluate(); };
-	}
-
-	auto as_function_of(const expression& x, const expression& y) const {
-		return [*this,x,y] (float px,float py) { return (*this).substitute(x,px).substitute(y,py).evaluate(); };
-	}
-
-	auto as_function_of(const expression& x, const expression& y, const expression& z) const {
-		return [*this,x,y,z] (float px,float py,float pz) { return (*this).substitute(x,px).substitute(y,py).substitute(z,pz).evaluate(); };
-	}
-
-	template<std::size_t N>
-	auto as_function_of(const std::array<expression,N>& c) const {
-		return [*this,c] (const std::array<float,N>& p) {
-			expression e = (*this);
-			typename std::array<expression,N>::const_iterator ic;
-			typename std::array<float,N>::const_iterator ip;
-			for (ic = c.begin(), ip = p.begin(); 
-				(ic != c.end()) && (ip != p.end()); 
-				++ic, ++ip)
-					e = e.substitute(*ic, *ip);
-			return e.evaluate();	
-		};
-	}
-	
-	auto as_function_of(const std::vector<expression>& c) const {
-		return [*this,c] (const std::vector<float>& p) {
-			expression e = (*this);
-			typename std::vector<expression>::const_iterator ic;
-			typename std::vector<float>::const_iterator ip;
-			for (ic = c.begin(), ip = p.begin(); 
-				(ic != c.end()) && (ip != p.end()); 
-				++ic, ++ip)
-					e = e.substitute(*ic, *ip);
-			return e.evaluate();	
-		};
-	}
-
 };
 
 
