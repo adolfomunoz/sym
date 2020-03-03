@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
 	test(x*x*x,x,y,sym::minus_infinity,sym::infinity);
 	test(1/x,x,y,0.001,sym::infinity);
 	test(sym::ln(x),x,y,0.001,sym::infinity);
-	test(sym::log(x,10),x,y,0.1,sym::infinity);
+	test(sym::log(x,2),x,y,0.1,100);
 	test(sym::pow(sym::e,x),x,y,sym::minus_infinity, sym::infinity);
 	test(sym::sin(x),x,y,sym::minus_infinity, sym::infinity);
 	test(sym::cos(x),x,y,sym::minus_infinity, sym::infinity);
